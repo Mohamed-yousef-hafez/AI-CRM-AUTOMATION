@@ -1,0 +1,44 @@
+{
+  "name": "CRM 2 - Daily Follow-up Check",
+  "flow": [
+    {
+      "id": 1,
+      "module": "datastore:SearchRecord",
+      "version": 1,
+      "parameters": { "datastore": "<YOUR_DATASTORE_ID>" },
+      "mapper": {
+        "filter": [[{ "a": "status", "b": "New", "o": "text:equal" }]]
+      },
+      "metadata": { "designer": { "x": 0, "y": 0 } }
+    },
+    {
+      "id": 2,
+      "module": "datastore:UpdateRecord",
+      "version": 1,
+      "parameters": { "datastore": "<YOUR_DATASTORE_ID>" },
+      "filter": {
+        "name": "Last contact more than 5 days ago",
+        "conditions": [[{ "a": "{{1.data.last_contact}}", "b": "{{addDays(now; -5)}}", "o": "date:less" }]]
+      },
+      "mapper": {
+        "key": "{{1.key}}",
+        "data": { "status": "Follow-up Needed" }
+      },
+      "metadata": { "designer": { "x": 300, "y": 0 } }
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false,
+      "maxErrors": 3,
+      "roundtrips": 1,
+      "sequential": false
+    }
+  }
+}

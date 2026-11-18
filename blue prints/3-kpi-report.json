@@ -1,0 +1,61 @@
+{
+  "name": "CRM 3 - KPI Report",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": { "hook": "<YOUR_WEBHOOK_ID>", "maxResults": 1 },
+      "mapper": {},
+      "metadata": { "designer": { "x": 0, "y": 0 } }
+    },
+    {
+      "id": 2,
+      "module": "datastore:SearchRecord",
+      "version": 1,
+      "parameters": { "datastore": "<YOUR_DATASTORE_ID>" },
+      "mapper": {
+        "filter": [[{ "a": "status", "b": "__none__", "o": "text:notequal" }]]
+      },
+      "metadata": { "designer": { "x": 300, "y": 0 } }
+    },
+    {
+      "id": 3,
+      "module": "builtin:BasicAggregator",
+      "version": 1,
+      "parameters": { "feeder": 2 },
+      "mapper": {
+        "category": "{{2.data.category}}",
+        "score": "{{2.data.score}}",
+        "status": "{{2.data.status}}",
+        "value": "{{2.data.value}}"
+      },
+      "metadata": { "designer": { "x": 600, "y": 0 } }
+    },
+    {
+      "id": 4,
+      "module": "gateway:WebhookRespond",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "status": 200,
+        "body": "{\"total_leads\":{{length(3.array)}},\"hot\":{{length(map(3.array; \"category\"; \"category\"; \"Hot\"))}},\"warm\":{{length(map(3.array; \"category\"; \"category\"; \"Warm\"))}},\"cold\":{{length(map(3.array; \"category\"; \"category\"; \"Cold\"))}},\"followups_needed\":{{length(map(3.array; \"status\"; \"status\"; \"Follow-up Needed\"))}},\"pipeline_value\":{{sum(map(3.array; \"value\"))}},\"avg_score\":{{round(average(map(3.array; \"score\")))}}}"
+      },
+      "metadata": { "designer": { "x": 900, "y": 0 } }
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": {
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false,
+      "maxErrors": 3,
+      "roundtrips": 1,
+      "sequential": false
+    }
+  }
+}
