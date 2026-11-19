@@ -19,6 +19,11 @@ An end-to-end CRM automation built with **Make.com**. It receives leads, scores 
 **The three scenarios in Make** (Workflow 2 is switched off because the free plan allows only two active scenarios):
 
 ![Scenarios](screenshots/1-scenarios.png)
+![Scenarios](screenshots/2-workflow-canvas.png)
+![Scenarios](screenshots/3-crm-leads.png)
+![Scenarios](screenshots/4-webhook-response.png)
+![Scenarios](screenshots/5-hot-lead-email.png)
+![Scenarios](screenshots/6-kpi-report.png)
 
 ## Architecture
 
